@@ -4,8 +4,8 @@ import cv2
 import numpy as np
 import os
 import main
-import logging
-logging.basicConfig(level=logging.DEBUG)
+# import logging
+# logging.basicConfig(level=logging.DEBUG)
 
 app = Flask(__name__)
 
@@ -36,7 +36,7 @@ def index():
 
 @app.route('/predict', methods=['POST'])
 def predict():
-    logging.debug("Received request at /predict")
+    # logging.debug("Received request at /predict")
     if 'file' not in request.files:
         return redirect(url_for('index'))
 
