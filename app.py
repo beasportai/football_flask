@@ -4,6 +4,8 @@ import cv2
 import numpy as np
 import os
 import main
+import logging
+logging.basicConfig(level=logging.DEBUG)
 
 app = Flask(__name__)
 
@@ -34,6 +36,7 @@ def index():
 
 @app.route('/predict', methods=['POST'])
 def predict():
+    logging.debug("Received request at /predict")
     if 'file' not in request.files:
         return redirect(url_for('index'))
 
@@ -52,5 +55,5 @@ def predict():
 
 
 if __name__ == '__main__':
-    port = int(os.environ.get("PORT", 10000))  # Render uses PORT from environment variables
+    port = int(os.environ.get("PORT", 5000))  # Render uses PORT from environment variables
     app.run(host="0.0.0.0", port=port)
