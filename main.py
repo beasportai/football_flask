@@ -7,7 +7,7 @@ from view_transformer import ViewTransformer
 from speed_distance_estimator import SpeedAndDistance_Estimator
 from utils import read_video, save_video, get_center_of_bbox, get_bbox_width, measure_distance, measure_xy_distance, get_foot_position
 from trackers import Tracker
-# from player_metrics import calculate_player_metrics
+from player_metrics import calculate_player_metrics
 import os
 from moviepy import VideoFileClip
 
@@ -87,8 +87,6 @@ def main(file_name):
     save_video(output_video_frames,'static/output/output_video.avi')
     convert_to_h264('static/output/output_video.avi','static/output/output_video.mp4')
     os.remove('static/output/output_video.avi')
-    # final_frame = len(video_frames) - 1
-    # player_metrics = calculate_player_metrics({'players': [tracks['players'][final_frame]]})  # Only final frame
-    # # return player_metrics
-    # print(player_metrics)
-# main("videoplayback (online-video-cutter.com).mp4")
+    final_frame = len(video_frames) - 1
+    player_metrics = calculate_player_metrics({'players': [tracks['players'][final_frame]]})  # Only final frame
+    return player_metrics
