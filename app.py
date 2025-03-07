@@ -4,8 +4,6 @@ import cv2
 import numpy as np
 import os
 import main
-# import logging
-# logging.basicConfig(level=logging.DEBUG)
 
 app = Flask(__name__)
 
@@ -13,6 +11,7 @@ UPLOAD_FOLDER = os.path.join('static', 'uploads')
 OUTPUT_FOLDER = os.path.join('static', 'output')
 STUBS_FOLDER = 'stubs'
 
+processed_player_metrics = {}
 
 
 model = YOLO("final_best.pt")
@@ -36,7 +35,7 @@ def index():
 
 @app.route('/predict', methods=['POST'])
 def predict():
-    # logging.debug("Received request at /predict")
+    global processed_player_metrics
     if 'file' not in request.files:
         return redirect(url_for('index'))
 
@@ -49,11 +48,20 @@ def predict():
 
     filepath = os.path.join(UPLOAD_FOLDER, f.filename)
     f.save(filepath)
-    main.main(filepath)
+    processed_player_metrics = main.main(filepath)
+    processed_player_metrics = {int(k): v for k, v in processed_player_metrics.items()}
+    
     return render_template('output.html')
 
+@app.route('/get_player_ids', methods=['GET'])
+def get_player_ids():
+    return jsonify(list(processed_player_metrics.keys()))  # Return list of player IDs
 
-
+@app.route('/get_metrics', methods=['GET'])
+def get_metrics():
+    player_id = request.args.get('player_id', type=int)
+    metrics = processed_player_metrics.get(player_id, {})
+    return jsonify(metrics)
 if __name__ == '__main__':
     port = int(os.environ.get("PORT", 5000))  # Render uses PORT from environment variables
     app.run(host="0.0.0.0", port=port, debug=True)
