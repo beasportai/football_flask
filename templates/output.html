@@ -4,13 +4,52 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Video Player</title>
+    <script>
+        async function fetchPlayerIDs() {
+            const response = await fetch('/get_player_ids');
+            const playerIDs = await response.json();
+            const select = document.getElementById('playerSelect');
+            select.innerHTML = '<option value="">Select a Player</option>';
+            playerIDs.forEach(id => {
+                const option = document.createElement('option');
+                option.value = id;
+                option.textContent = `Player ${id}`;
+                select.appendChild(option);
+            });
+        }
+
+        async function fetchMetrics(playerID) {
+            if (!playerID) return;
+            const response = await fetch(`/get_metrics?player_id=${playerID}`);
+            const metrics = await response.json();
+            document.getElementById('metrics').innerHTML = `
+                <p><strong>Matches:</strong> ${metrics.matches || 'N/A'}</p>
+                <p><strong>Goals:</strong> ${metrics.goals || 'N/A'}</p>
+                <p><strong>Assists:</strong> ${metrics.assists || 'N/A'}</p>
+                <p><strong>Fitness Score:</strong> ${metrics.fitness_score || 'N/A'}</p>
+                <p><strong>Win Rate:</strong> ${metrics.win_rate || 'N/A'}%</p>
+                <p><strong>Performance Score:</strong> ${metrics.performance_score || 'N/A'}</p>
+            `;
+        }
+
+        document.addEventListener("DOMContentLoaded", fetchPlayerIDs);
+    </script>
 </head>
 <body>
     <h2>Video Player</h2>
-    <video width="640" height="360" controls>
+    <video id="videoPlayer" width="640" height="360" controls>
         <source src="../static/output/output_video.mp4" type="video/mp4">
-
         Your browser does not support the video tag.
     </video>
+
+    <h3>Select Player</h3>
+    <select id="playerSelect" onchange="fetchMetrics(this.value)">
+        <option value="">Loading...</option>
+    </select>
+
+    <h3>Player Metrics</h3>
+    <div id="metrics">
+        <p>Select a player to view metrics.</p>
+    </div>
 </body>
 </html>
