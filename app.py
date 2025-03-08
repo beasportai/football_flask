@@ -63,5 +63,6 @@ def get_metrics():
     metrics = processed_player_metrics.get(player_id, {})
     return jsonify(metrics)
 if __name__ == '__main__':
-    port = int(os.environ.get("PORT", 5000))  # Render uses PORT from environment variables
-    app.run(host="0.0.0.0", port=port, debug=True)
+    # port = int(os.environ.get("PORT", 5000))  # Render uses PORT from environment variables
+    # app.run(host="0.0.0.0", port=port, debug=True)
+    app.run()
