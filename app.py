@@ -36,18 +36,18 @@ def index():
 @app.route('/predict', methods=['POST'])
 def predict():
     # global processed_player_metrics
-    # if 'file' not in request.files:
-    #     return redirect(url_for('index'))
+    if 'file' not in request.files:
+        return redirect(url_for('index'))
 
-    # f = request.files['file']
-    # if f.filename == '':
-    #     return redirect(url_for('index'))
+    f = request.files['file']
+    if f.filename == '':
+        return redirect(url_for('index'))
 
-    # if not allowed_file(f.filename):  
-    #     return redirect(url_for('index'))
+    if not allowed_file(f.filename):  
+        return redirect(url_for('index'))
 
-    # filepath = os.path.join(UPLOAD_FOLDER, f.filename)
-    # f.save(filepath)
+    filepath = os.path.join(UPLOAD_FOLDER, f.filename)
+    f.save(filepath)
     # processed_player_metrics = main.main(filepath)
     # processed_player_metrics = {int(k): v for k, v in processed_player_metrics.items()}
     
