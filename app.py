@@ -35,33 +35,33 @@ def index():
 
 @app.route('/predict', methods=['POST'])
 def predict():
-    global processed_player_metrics
-    if 'file' not in request.files:
-        return redirect(url_for('index'))
+    # global processed_player_metrics
+    # if 'file' not in request.files:
+    #     return redirect(url_for('index'))
 
-    f = request.files['file']
-    if f.filename == '':
-        return redirect(url_for('index'))
+    # f = request.files['file']
+    # if f.filename == '':
+    #     return redirect(url_for('index'))
 
-    if not allowed_file(f.filename):  
-        return redirect(url_for('index'))
+    # if not allowed_file(f.filename):  
+    #     return redirect(url_for('index'))
 
-    filepath = os.path.join(UPLOAD_FOLDER, f.filename)
-    f.save(filepath)
-    processed_player_metrics = main.main(filepath)
-    processed_player_metrics = {int(k): v for k, v in processed_player_metrics.items()}
+    # filepath = os.path.join(UPLOAD_FOLDER, f.filename)
+    # f.save(filepath)
+    # processed_player_metrics = main.main(filepath)
+    # processed_player_metrics = {int(k): v for k, v in processed_player_metrics.items()}
     
     return render_template('output.html')
 
-@app.route('/get_player_ids', methods=['GET'])
-def get_player_ids():
-    return jsonify(list(processed_player_metrics.keys()))  # Return list of player IDs
+# @app.route('/get_player_ids', methods=['GET'])
+# def get_player_ids():
+#     return jsonify(list(processed_player_metrics.keys()))  # Return list of player IDs
 
-@app.route('/get_metrics', methods=['GET'])
-def get_metrics():
-    player_id = request.args.get('player_id', type=int)
-    metrics = processed_player_metrics.get(player_id, {})
-    return jsonify(metrics)
+# @app.route('/get_metrics', methods=['GET'])
+# def get_metrics():
+#     player_id = request.args.get('player_id', type=int)
+#     metrics = processed_player_metrics.get(player_id, {})
+#     return jsonify(metrics)
 if __name__ == '__main__':
     port = int(os.environ.get("PORT", 5000))  # Render uses PORT from environment variables
     app.run(host="0.0.0.0", port=port,debug=True)
